@@ -5,7 +5,9 @@ namespace ProjectTasksManager.Services.Interfaces
 {
     public interface IUserService
     {
-        Task AddUser(User user);
-        Task<User?> GetUser(User user);
+        Task<User> AddUser(User user);
+        Task<string> Authenticate(string email, string password);
+        Task<User?> GetUserById(int id);
+
     }
 }

@@ -1,8 +1,7 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.User;
 using ProjectTasksManager.Mappers;
-using ProjectTasksManager.Models;
 using ProjectTasksManager.Services.Interfaces;
 
 namespace ProjectTasksManager.Controllers
@@ -11,20 +10,34 @@ namespace ProjectTasksManager.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        public IUserService userService;
-        public UserController(IUserService userService)
+        private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
+
+        public UserController(IUserService userService, ITokenService tokenService)
         {
-            this.userService = userService;
+            _userService = userService;
+            _tokenService = tokenService;
         }
-        [HttpGet]
-        public async Task<IActionResult> Get(UserDto userdto) 
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserCreateDto userDto)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = UserMappers.MapUserCreateDtoToUser(userDto);
 
             try
             {
-                User user = UserMappers.MapUserDtoToUser(userdto);
-                await userService.GetUser(user);
+                var createdUser = await _userService.AddUser(user);
+
+                var response = new UserResponseDto
+                {
+                    Id = createdUser.Id,
+                    Email = createdUser.Email
+                };
+
+                return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, response);
             }
             catch (ArgumentException ex)
             {
@@ -33,32 +46,73 @@ namespace ProjectTasksManager.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { Error = "An unexpected server error occurred during creation." });
+                    new { Error = "An unexpected server error occurred during registration." });
             }
-
-            return Ok();
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(UserCreateDto userDto)
-        {
-            if (!ModelState.IsValid) return BadRequest();
 
-            User user = UserMappers.MapUserCreateDtoToUser(userDto);
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserDto loginDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
-                await userService.AddUser(user);
-                return CreatedAtAction(actionName: "Create a new user", value: userDto);
+                var token = await _userService.Authenticate(loginDto.Email, loginDto.Password);
+                var user = await _userService.GetUserById(int.Parse(
+                    _tokenService.ValidateToken(token)?.FindFirst("UserId")?.Value ?? "0"));
+
+                if (user == null)
+                    return Unauthorized();
+
+                var response = new LoginResponseDto
+                {
+                    Token = token,
+                    Expires = DateTime.UtcNow.AddMinutes(60),
+                    User = new UserResponseDto
+                    {
+                        Id = user.Id,
+                        Email = user.Email
+                    }
+                };
+
+                return Ok(response);
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new { Error = ex.Message });
+                return Unauthorized(new { Error = ex.Message });
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new { Error = "An unexpected server error occurred during creation." });
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during login." });
             }
         }
-        
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            try
+            {
+                var user = await _userService.GetUserById(id);
+
+                if (user == null)
+                    return NotFound(new { Error = "User not found." });
+
+                var response = new UserResponseDto
+                {
+                    Id = user.Id,
+                    Email = user.Email
+                };
+
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred." });
+            }
+        }
     }
 }
