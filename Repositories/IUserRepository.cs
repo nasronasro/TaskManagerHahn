@@ -7,5 +7,6 @@ namespace ProjectTasksManager.Repositories
     {
         Task AddAsync(User user);
         Task<bool> IsEmailUniqueAsync(string email);
+        Task<User?> GetAsyncUser(string email);
     }
 }

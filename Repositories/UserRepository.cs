@@ -17,6 +17,13 @@ namespace ProjectTasksManager.Repositories
             var newUser = await _context.Users.AddAsync(user);
         }
 
+        public async Task<User?> GetAsyncUser(string email) {
+            return await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<bool> IsEmailUniqueAsync(string email)
         {
 
