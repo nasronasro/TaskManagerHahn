@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.User;
 using ProjectTasksManager.Mappers;
 using ProjectTasksManager.Models;
-using ProjectTasksManager.Services;
+using ProjectTasksManager.Services.Interfaces;
 
 namespace ProjectTasksManager.Controllers
 {

@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using ProjectTasksManager.Data;
 using ProjectTasksManager.Repositories;
+using ProjectTasksManager.Repositories.Interfaces;
 using ProjectTasksManager.Services;
+using ProjectTasksManager.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

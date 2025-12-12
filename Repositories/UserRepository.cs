@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectTasksManager.Data;
 using ProjectTasksManager.Models;
+using ProjectTasksManager.Repositories.Interfaces;
 using Task = System.Threading.Tasks.Task;
 
 namespace ProjectTasksManager.Repositories

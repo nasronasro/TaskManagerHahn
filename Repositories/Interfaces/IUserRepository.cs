@@ -1,7 +1,7 @@
 ﻿using ProjectTasksManager.Models;
 using Task = System.Threading.Tasks.Task;
 
-namespace ProjectTasksManager.Repositories
+namespace ProjectTasksManager.Repositories.Interfaces
 {
     public interface IUserRepository
     {

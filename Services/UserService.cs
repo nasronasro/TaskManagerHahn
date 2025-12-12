@@ -1,6 +1,7 @@
 ﻿using ProjectTasksManager.Data;
 using ProjectTasksManager.Models;
-using ProjectTasksManager.Repositories;
+using ProjectTasksManager.Repositories.Interfaces;
+using ProjectTasksManager.Services.Interfaces;
 using Task = System.Threading.Tasks.Task;
 
 
