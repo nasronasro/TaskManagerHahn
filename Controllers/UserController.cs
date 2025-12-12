@@ -7,6 +7,6 @@ namespace ProjectTasksManager.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-   
+        
     }
 }
