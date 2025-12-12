@@ -22,6 +22,7 @@ namespace ProjectTasksManager.Data
             {
                 entity.HasIndex(u => u.Email).IsUnique();
             });
+
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.HasIndex(p => p.Title).IsUnique();
