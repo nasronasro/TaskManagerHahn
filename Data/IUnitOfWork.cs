@@ -1,4 +1,4 @@
-﻿namespace ProjectTasksManager.UnitOfWork
+﻿namespace ProjectTasksManager.Data
 {
     public interface IUnitOfWork : IDisposable
     {
