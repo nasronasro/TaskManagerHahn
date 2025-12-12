@@ -13,5 +13,13 @@ namespace ProjectTasksManager.Mappers
                 Password = dto.Password
             };
         }
+        public static User MapUserDtoToUser(UserDto dto)
+        {
+            return new User
+            {
+                Email = dto.Email,
+                Password = dto.Password
+            };
+        }
     }
 }

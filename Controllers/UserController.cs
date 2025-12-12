@@ -16,7 +16,28 @@ namespace ProjectTasksManager.Controllers
         {
             this.userService = userService;
         }
+        [HttpGet]
+        public async Task<IActionResult> Get(UserDto userdto) 
+        {
+            if (!ModelState.IsValid) return BadRequest();
 
+            try
+            {
+                User user = UserMappers.MapUserDtoToUser(userdto);
+                await userService.GetUser(user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during creation." });
+            }
+
+            return Ok();
+        }
         [HttpPost]
         public async Task<IActionResult> Create(UserCreateDto userDto)
         {
