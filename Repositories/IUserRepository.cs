@@ -1,8 +1,11 @@
 ﻿using ProjectTasksManager.Models;
+using Task = System.Threading.Tasks.Task;
+
 namespace ProjectTasksManager.Repositories
 {
     public interface IUserRepository
     {
-        Task<User> AddAsync(User user);
+        Task AddAsync(User user);
+        Task<bool> IsEmailUniqueAsync(string email);
     }
 }
