@@ -23,7 +23,17 @@ namespace ProjectTasksManager.Services
                 await unitOfWork.CommitAsync();
             }
             else throw new ArgumentException($"User with email '{user.Email}' already exists.");
-            
+        }
+        public async Task<User?> GetUser(User user)
+        {
+            User? currUser = await userRepository.GetAsyncUser(user.Email);
+            if (currUser == null)
+                throw new ArgumentException("Invalid credentials.");
+
+            if (currUser.Password == user.Password)
+                return currUser;
+
+            throw new ArgumentException("Invalid credentials.");
         }
     }
 }
