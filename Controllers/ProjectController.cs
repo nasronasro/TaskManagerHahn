@@ -18,7 +18,7 @@ namespace ProjectTasksManager.Controllers
         {
             this.projectService = projectService;
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> CreatePost(ProjectCreateDto projectDto)
         {
@@ -32,7 +32,7 @@ namespace ProjectTasksManager.Controllers
                 await projectService.AddProject(project, UserEmail);
                 return Ok(projectDto);
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { ex.Message });
             }
@@ -60,7 +60,8 @@ namespace ProjectTasksManager.Controllers
                 ICollection<Project> projects = await projectService.GetAllProjects(userEmail);
 
                 return Ok(ProjectMappers.MapProjectsToProjectDtos(projects));
-            }catch (KeyNotFoundException ex)
+            }
+            catch (KeyNotFoundException ex)
             {
                 return NotFound(new { ex.Message });
             }
@@ -105,5 +106,6 @@ namespace ProjectTasksManager.Controllers
                 );
             }
         }
+
     }
 }
