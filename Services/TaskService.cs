@@ -16,9 +16,9 @@ namespace ProjectTasksManager.Services
             this.projectRepository = projectRepository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task AddTask(Models.Task task, int projectId, string userEmail)
+        public async Task AddTask(Models.Task task, string userEmail)
         {
-            task.Project = await projectRepository.GetOne(projectId, userEmail);
+            task.Project = await projectRepository.GetOne(task.ProjectId, userEmail);
             if (task.Project == null)                 
                 throw new KeyNotFoundException($"The Project associated with Task ID {task.Id} could not be found.");
 

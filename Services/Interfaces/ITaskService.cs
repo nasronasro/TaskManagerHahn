@@ -2,6 +2,6 @@
 {
     public interface ITaskService
     {
-        Task AddTask(Models.Task task, int projectId, string userEmail);
+        Task AddTask(Models.Task task, string userEmail);
     }
 }
