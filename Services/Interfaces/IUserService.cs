@@ -7,5 +7,6 @@ namespace ProjectTasksManager.Services.Interfaces
     {
         Task AddUser(User user);
         Task<User?> GetUser(User user);
+        
     }
 }

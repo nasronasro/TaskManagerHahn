@@ -21,9 +21,14 @@ namespace ProjectTasksManager.Services
         public async Task AddProject(Project project)
         {
             if (await projectRepository.checkProjectExist(project.Title))
-               throw new Exception("This project title alreay exist!");
+               throw new ArgumentException("This project title alreay exist!");
 
              await projectRepository.create(project);
+        }
+
+        public async Task<List<Project>> GetAllProjects(User user)
+        {
+            return await projectRepository.GetAll(user);
         }
     }
 }

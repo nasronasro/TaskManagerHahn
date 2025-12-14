@@ -7,6 +7,6 @@ namespace ProjectTasksManager.Repositories.Interfaces
     {
         Task create(Project project);
         Task<bool> checkProjectExist(string Title);
-        Task<List<Project>> GetAll();
+        Task<List<Project>> GetAll(User user);
     }
 }

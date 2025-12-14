@@ -6,5 +6,6 @@ namespace ProjectTasksManager.Services.Interfaces
     public interface IProjectService
     {
         Task AddProject(Project project);
+        Task<List<Project>> GetAllProjects(User user);
     }
 }
