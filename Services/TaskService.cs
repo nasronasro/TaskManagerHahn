@@ -35,5 +35,15 @@ namespace ProjectTasksManager.Services
             await taskRepository.Delete(task);
             await unitOfWork.CommitAsync();
         }
+
+        public async Task<ICollection<Models.Task>> GetAllTasks(int projectId)
+        {
+            ICollection<Models.Task> tasks = await taskRepository.GetAllTasks(projectId);
+            if (tasks.Count == 0)
+                throw new KeyNotFoundException("No Key found");
+
+            await unitOfWork.CommitAsync();
+            return tasks;
+        }
     }
 }
