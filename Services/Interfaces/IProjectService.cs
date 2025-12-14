@@ -3,10 +3,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace ProjectTasksManager.Services.Interfaces
 {
-    public interface IUserService
+    public interface IProjectService
     {
-        Task AddUser(User user);
-        Task<User?> GetUser(User user);
-        
+        Task AddProject(Project project);
+        Task<List<Project>> GetAllProjects(User user);
     }
 }

@@ -1,6 +1,1 @@
 @ProjectTasksManager_HostAddress = http://localhost:5136
-
-GET {{ProjectTasksManager_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
