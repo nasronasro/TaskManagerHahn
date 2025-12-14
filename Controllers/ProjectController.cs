@@ -20,10 +20,6 @@ namespace ProjectTasksManager.Controllers
             this.projectService = projectService;
         }
         
-        public IActionResult Index()
-        {
-            return View();
-        }
         [HttpPost]
         public async Task<IActionResult> CreatePost(ProjectCreateDto projectDto)
         {
@@ -53,8 +49,37 @@ namespace ProjectTasksManager.Controllers
                     }
                 );
             }
-
         }
-        
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                string? userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                if (userEmail == null)
+                    return Unauthorized();
+                List<Project> projects = await projectService.GetAllProjects(userEmail);
+                return Ok(projects);
+            }catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                string? userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                if (userEmail == null)
+                    return Unauthorized();
+                Project project = await projectService.GetProject(id, userEmail);
+                return Ok(project);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { ex.Message });
+            }
+        }
     }
 }
