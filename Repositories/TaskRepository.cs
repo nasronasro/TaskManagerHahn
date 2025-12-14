@@ -1,4 +1,5 @@
-﻿using ProjectTasksManager.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectTasksManager.Data;
 using ProjectTasksManager.Repositories.Interfaces;
 
 namespace ProjectTasksManager.Repositories
@@ -14,6 +15,15 @@ namespace ProjectTasksManager.Repositories
         public async Task Create(Models.Task task)
         {
             await dbContext.Tasks.AddAsync(task);
+        }
+
+        public async Task Delete(Models.Task task)
+        {
+            dbContext.Tasks.Remove(task);
+            await Task.CompletedTask;
+        }
+        public async Task<Models.Task?> GetTask(int id) {
+            return await dbContext.Tasks.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
     }
 }

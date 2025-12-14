@@ -3,5 +3,6 @@
     public interface ITaskRepository
     {
         Task Create(Models.Task task);
+        Task Delete(Models.Task task);
     }
 }

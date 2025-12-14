@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.Task;
 using ProjectTasksManager.Mappers;
-using ProjectTasksManager.Repositories.Interfaces;
 using ProjectTasksManager.Services.Interfaces;
 
 namespace ProjectTasksManager.Controllers
