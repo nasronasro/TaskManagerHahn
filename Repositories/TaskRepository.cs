@@ -31,5 +31,10 @@ namespace ProjectTasksManager.Repositories
         public async Task<Models.Task?> GetTask(int id) {
             return await dbContext.Tasks.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
+        public void Update(Models.Task task)
+        {
+            dbContext.Tasks.Attach(task);
+            dbContext.Entry(task).State = EntityState.Modified;
+        }
     }
 }
