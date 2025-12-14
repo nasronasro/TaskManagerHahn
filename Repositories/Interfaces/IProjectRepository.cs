@@ -6,5 +6,6 @@ namespace ProjectTasksManager.Repositories.Interfaces
     public interface IProjectRepository
     {
         Task create(Project project);
+        Task<bool> checkProjectExist(string Title);
     }
 }
