@@ -72,7 +72,26 @@ namespace ProjectTasksManager.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { Error = "An unexpected server error occurred during Fetching Task." });
+                    new { Error = "An unexpected server error occurred during Fetching Tasks." });
+            }
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateStatus(int id)
+        {
+            try
+            {
+                await taskService.UpdateTaskState(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during updating a Task." });
             }
         }
     }

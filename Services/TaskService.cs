@@ -47,10 +47,11 @@ namespace ProjectTasksManager.Services
             return tasks;
         }
 
-        public async Task UpdateTaskState(Models.Task task)
+        public async Task UpdateTaskState(int taskId)
         {
+            Models.Task? task = await taskRepository.GetTask(taskId);
             if (task == null || task.Completed)
-                throw new KeyNotFoundException($"The Project associated with Task ID {task.Id} could not be found.");
+                throw new KeyNotFoundException($"The Project associated with Task ID {taskId} could not be found.");
 
             task.Completed = true;
             await unitOfWork.CommitAsync();
