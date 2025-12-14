@@ -41,5 +41,13 @@ namespace ProjectTasksManager.Services
 
             return await projectRepository.GetAll(user);
         }
+
+        public async Task<Project> GetProject(int id, string userEmail)
+        {
+            Project? project = await projectRepository.GetOne(id, userEmail);
+            if (project == null)
+                throw new Exception("Element Not found");
+            return project;
+        }
     }
 }
