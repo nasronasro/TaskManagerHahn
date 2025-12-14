@@ -10,6 +10,7 @@ namespace ProjectTasksManager.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
     public class ProjectController : Controller
     {
         private readonly IProjectService projectService;

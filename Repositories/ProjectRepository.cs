@@ -30,5 +30,10 @@ namespace ProjectTasksManager.Repositories
                 .Where(p => p.User.Email == user.Email)
                 .ToListAsync();
         }
+
+        public async Task<Project?> GetOne(int id)
+        {
+            return await dbContext.Projects.Where(p=>p.Id ==id).FirstOrDefaultAsync();
+        }
     }
 }
