@@ -39,6 +39,17 @@ namespace ProjectTasksManager.Services
             int count = tasks.Where(t=>t.Completed == true).Count();
             return count;
         }
+        public async Task<double> CalculateProgress(int projectId)
+        {
+            if (await CountTotalTasksInProject(projectId) == 0)
+                throw new ArithmeticException("There is no tasks to count Progress");
+
+            int total = await CountTotalTasksInProject(projectId);
+            int completed = await CountTotalCompletedTasksInProject(projectId);
+            double progress = (double)completed / total;
+            return progress;
+        }
+
 
         public async Task DeleteTask(int taskId)
         {

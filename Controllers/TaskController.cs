@@ -96,12 +96,27 @@ namespace ProjectTasksManager.Controllers
                     new { Error = "An unexpected server error occurred during updating a Task." });
             }
         }
-        [HttpGet("/Project/{projectId}")]
+        [HttpGet("/project/{projectId}")]
         public async Task<IActionResult> GetTaskCount(int projectId)
         {
             try
             {
                 int count = await taskService.CountTotalTasksInProject(projectId);
+                return Ok(count);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during Fetching Tasks." });
+            }
+
+        }
+        [HttpGet("/project/{projectId}/completed")]
+        public async Task<IActionResult> GetCompletedTaskCount(int projectId)
+        {
+            try
+            {
+                int count = await taskService.CountTotalCompletedTasksInProject(projectId);
                 return Ok(count);
             }
             catch
