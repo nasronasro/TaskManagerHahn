@@ -7,5 +7,6 @@ namespace ProjectTasksManager.Services.Interfaces
     {
         Task AddProject(Project project, string userEmail);
         Task<List<Project>> GetAllProjects(string userEmail);
+        Task<Project> GetProject(int id, string userEmail);
     }
 }

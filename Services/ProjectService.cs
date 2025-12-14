@@ -41,5 +41,10 @@ namespace ProjectTasksManager.Services
 
             return await projectRepository.GetAll(user);
         }
+
+        public Task<Project> GetProject(int id, string Email)
+        {
+            
+        }
     }
 }
