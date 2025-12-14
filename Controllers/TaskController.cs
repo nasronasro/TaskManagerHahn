@@ -16,8 +16,8 @@ namespace ProjectTasksManager.Controllers
             this.taskService = taskService;
         }
         [HttpPost]
-         public async Task<IActionResult> Create(TaskCreateDto taskDto)
-         {
+        public async Task<IActionResult> Create(TaskCreateDto taskDto)
+        {
             if (!ModelState.IsValid) return BadRequest();
             try
             {
@@ -43,9 +43,6 @@ namespace ProjectTasksManager.Controllers
         {
             try
             {
-                string? userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-                if (userEmail == null)
-                    return Unauthorized();
                 await taskService.DeleteTask(id);
                 return NoContent();
             }
@@ -57,6 +54,25 @@ namespace ProjectTasksManager.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { Error = "An unexpected server error occurred during Deleting a Task." });
+            }
+        }
+        [HttpGet("{projectId}")]
+        public async Task<IActionResult> GetAll(int projectId)
+        {
+            try
+            {
+                ICollection<Models.Task> tasks = await taskService.GetAllTasks(projectId);
+                
+                return Ok(TaskMappers.MapTasksToTaskDtos(tasks));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during Fetching Task." });
             }
         }
     }
