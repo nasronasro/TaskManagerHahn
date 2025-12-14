@@ -22,6 +22,12 @@ namespace ProjectTasksManager.Repositories
             dbContext.Tasks.Remove(task);
             await Task.CompletedTask;
         }
+
+        public async Task<ICollection<Models.Task>> GetAllTasks(int projectId)
+        {
+            return await dbContext.Tasks.Where(t => t.Project.Id == projectId).ToListAsync();
+        }
+
         public async Task<Models.Task?> GetTask(int id) {
             return await dbContext.Tasks.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
