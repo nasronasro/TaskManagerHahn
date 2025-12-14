@@ -1,4 +1,5 @@
-﻿using ProjectTasksManager.DTOs.User;
+﻿using System.Security.Claims;
+using ProjectTasksManager.DTOs.User;
 using ProjectTasksManager.Models;
 
 namespace ProjectTasksManager.Mappers

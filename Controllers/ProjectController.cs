@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.Project;
 using ProjectTasksManager.Mappers;
+using ProjectTasksManager.Models;
 using ProjectTasksManager.Services.Interfaces;
 
 namespace ProjectTasksManager.Controllers
@@ -25,11 +28,13 @@ namespace ProjectTasksManager.Controllers
         public async Task<IActionResult> CreatePost(ProjectCreateDto projectDto)
         {
             if (!ModelState.IsValid) return BadRequest();
-
             try
             {
-                var project = ProjectMappers.MapProjectCreateDtoToProject(projectDto,User);
-                await projectService.AddProject(project);
+                var project = ProjectMappers.MapProjectCreateDtoToProject(projectDto);
+                string? UserEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                if (UserEmail == null)
+                    return Unauthorized();
+                await projectService.AddProject(project, UserEmail);
                 return Ok(projectDto);
             }
             catch(ArgumentException ex)
