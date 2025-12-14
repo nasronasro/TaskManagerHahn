@@ -1,4 +1,5 @@
-﻿using ProjectTasksManager.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectTasksManager.Data;
 using ProjectTasksManager.Repositories.Interfaces;
 using ProjectTasksManager.Services.Interfaces;
 
@@ -44,6 +45,15 @@ namespace ProjectTasksManager.Services
 
             await unitOfWork.CommitAsync();
             return tasks;
+        }
+
+        public async Task UpdateTaskState(Models.Task task)
+        {
+            if (task == null || task.Completed)
+                throw new KeyNotFoundException($"The Project associated with Task ID {task.Id} could not be found.");
+
+            task.Completed = true;
+            await unitOfWork.CommitAsync();
         }
     }
 }

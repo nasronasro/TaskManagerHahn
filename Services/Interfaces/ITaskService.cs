@@ -5,5 +5,6 @@
         Task AddTask(Models.Task task, string userEmail);
         Task DeleteTask(int taskId);
         Task<ICollection<Models.Task>> GetAllTasks(int projectId);
+        Task UpdateTaskState(Models.Task);
     }
 }
