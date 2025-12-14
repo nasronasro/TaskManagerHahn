@@ -38,7 +38,7 @@ namespace ProjectTasksManager.Controllers
                     new { Error = "An unexpected server error occurred during Creating a Task." });
             }
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

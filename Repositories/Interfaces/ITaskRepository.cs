@@ -5,5 +5,6 @@
         Task Create(Models.Task task);
         Task Delete(Models.Task task);
         Task<Models.Task?> GetTask(int id);
+
     }
 }
