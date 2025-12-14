@@ -23,5 +23,12 @@ namespace ProjectTasksManager.Repositories
         {
             await dbContext.Projects.AddAsync(project);
         }
+
+        public async Task<List<Project>> GetAll(User user)
+        {
+            return await dbContext.Projects
+                .Where(p => p.User.Email == user.Email)
+                .ToListAsync();
+        }
     }
 }
