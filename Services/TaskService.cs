@@ -27,6 +27,13 @@ namespace ProjectTasksManager.Services
             await unitOfWork.CommitAsync();
         }
 
+        public async Task<int> CountTotalTasksInProject(int projectId)
+        {
+            var tasks = await taskRepository.GetAllTasks(projectId);
+            int count = tasks.Count;
+            return count;
+        }
+
         public async Task DeleteTask(int taskId)
         {
             Models.Task? task = await taskRepository.GetTask(taskId);

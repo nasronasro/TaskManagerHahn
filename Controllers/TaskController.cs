@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.Task;
 using ProjectTasksManager.Mappers;
@@ -8,6 +9,7 @@ namespace ProjectTasksManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TaskController : Controller
     {
         private readonly ITaskService taskService;
