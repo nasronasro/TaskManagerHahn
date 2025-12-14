@@ -124,7 +124,20 @@ namespace ProjectTasksManager.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { Error = "An unexpected server error occurred during Fetching Tasks." });
             }
-
+        }
+        [HttpGet("/project/{projectId}/progress")]
+        public async Task<IActionResult> GetProgressOfProject(int projectId)
+        {
+            try
+            {
+                double progress = await taskService.CalculateProgress(projectId);
+                return Ok(progress);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during Fetching Tasks." });
+            }
         }
     }
 }
