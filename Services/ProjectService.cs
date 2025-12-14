@@ -31,6 +31,7 @@ namespace ProjectTasksManager.Services
 
             project.User = user;  
             await projectRepository.create(project);
+            await unitOfWork.CommitAsync();
         }
 
             public async Task<ICollection<Project>> GetAllProjects(string userEmail)
@@ -41,6 +42,7 @@ namespace ProjectTasksManager.Services
                 if(projects.Count ==0)
                     throw new KeyNotFoundException($"No projects found for user with email '{userEmail}'.");
 
+            await unitOfWork.CommitAsync();
             return projects;
         }
 
@@ -49,6 +51,8 @@ namespace ProjectTasksManager.Services
             Project? project = await projectRepository.GetOne(id, userEmail);
             if (project == null)
                 throw new KeyNotFoundException($"The project of id: {id} not found");
+
+            await unitOfWork.CommitAsync();
             return project;
         }
     }

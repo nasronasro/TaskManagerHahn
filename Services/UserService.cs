@@ -43,11 +43,16 @@ namespace ProjectTasksManager.Services
             if (!VerifyPassword(password, user.Password))
                 throw new ArgumentException("Invalid credentials.");
 
+            await _unitOfWork.CommitAsync();
             return _tokenService.GenerateToken(user);
         }
 
         public async Task<User?> GetUserById(int id)
         {
+            if (await _userRepository.GetByIdAsync(id) == null)
+                throw new ArgumentException("There is no user with this Id");
+
+            await _unitOfWork.CommitAsync();
             return await _userRepository.GetByIdAsync(id);
         }
 
