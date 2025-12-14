@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using System.Security.Principal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.Project;
@@ -59,7 +58,8 @@ namespace ProjectTasksManager.Controllers
                 if (userEmail == null)
                     return Unauthorized();
                 ICollection<Project> projects = await projectService.GetAllProjects(userEmail);
-                return Ok(projects);
+
+                return Ok(ProjectMappers.MapProjectsToProjectDtos(projects));
             }catch (KeyNotFoundException ex)
             {
                 return NotFound(new { ex.Message });
@@ -86,7 +86,7 @@ namespace ProjectTasksManager.Controllers
                 if (userEmail == null)
                     return Unauthorized();
                 Project project = await projectService.GetProject(id, userEmail);
-                return Ok(project);
+                return Ok(ProjectMappers.MapProjectToProjectDto(project));
             }
             catch (KeyNotFoundException ex)
             {

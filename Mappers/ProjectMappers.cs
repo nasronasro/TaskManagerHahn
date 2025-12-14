@@ -14,5 +14,23 @@ namespace ProjectTasksManager.Mappers
             };
 
         }
+        public static ProjectDto MapProjectToProjectDto(Project entity)
+        {
+            return new ProjectDto
+            {
+                Title = entity.Title,
+                Description = entity.Description,
+            };
+        }
+        public static ICollection<ProjectDto> MapProjectsToProjectDtos(ICollection<Project> entities)
+        {
+            ICollection<ProjectDto> dtos = new List<ProjectDto>();
+
+            foreach(Project entity in entities)
+            {
+                dtos.Add(MapProjectToProjectDto(entity));
+            }
+            return dtos;
+        }
     }
 }
