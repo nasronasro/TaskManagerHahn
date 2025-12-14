@@ -31,22 +31,28 @@ namespace ProjectTasksManager.Services
 
             project.User = user;  
             await projectRepository.create(project);
+            await unitOfWork.CommitAsync();
         }
 
-        public async Task<List<Project>> GetAllProjects(string userEmail)
-        {
-            User? user = await userRepository.GetAsyncUser(userEmail);
-            if (user == null)
-                throw new Exception("Not authorizied");
+            public async Task<ICollection<Project>> GetAllProjects(string userEmail)
+            {
+                User? user = await userRepository.GetAsyncUser(userEmail);
 
-            return await projectRepository.GetAll(user);
+                ICollection<Project> projects =  await projectRepository.GetAll(user);
+                if(projects.Count ==0)
+                    throw new KeyNotFoundException($"No projects found for user with email '{userEmail}'.");
+
+            await unitOfWork.CommitAsync();
+            return projects;
         }
 
         public async Task<Project> GetProject(int id, string userEmail)
         {
             Project? project = await projectRepository.GetOne(id, userEmail);
             if (project == null)
-                throw new Exception("Element Not found");
+                throw new KeyNotFoundException($"The project of id: {id} not found");
+
+            await unitOfWork.CommitAsync();
             return project;
         }
     }
