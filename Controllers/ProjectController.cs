@@ -58,11 +58,23 @@ namespace ProjectTasksManager.Controllers
                 string? userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 if (userEmail == null)
                     return Unauthorized();
-                List<Project> projects = await projectService.GetAllProjects(userEmail);
+                ICollection<Project> projects = await projectService.GetAllProjects(userEmail);
                 return Ok(projects);
-            }catch (Exception ex)
+            }catch (KeyNotFoundException ex)
             {
-                return BadRequest(new { ex.Message });
+                return NotFound(new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ProblemDetails
+                    {
+                        Status = StatusCodes.Status500InternalServerError,
+                        Title = "An internal server error occurred while fetching the projects.",
+                        Detail = ex.Message
+                    }
+                );
             }
         }
         [HttpGet("{id}")]
@@ -76,9 +88,21 @@ namespace ProjectTasksManager.Controllers
                 Project project = await projectService.GetProject(id, userEmail);
                 return Ok(project);
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException ex)
             {
                 return NotFound(new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ProblemDetails
+                    {
+                        Status = StatusCodes.Status500InternalServerError,
+                        Title = "An internal server error occurred while fetching the project.",
+                        Detail = ex.Message
+                    }
+                );
             }
         }
     }
