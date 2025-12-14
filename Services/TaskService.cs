@@ -25,5 +25,15 @@ namespace ProjectTasksManager.Services
             await taskRepository.Create(task);
             await unitOfWork.CommitAsync();
         }
+
+        public async Task DeleteTask(int taskId)
+        {
+            Models.Task? task = await taskRepository.GetTask(taskId);
+
+            if (task == null) throw new ArgumentException("this task doesn't exist");
+            
+            await taskRepository.Delete(task);
+            await unitOfWork.CommitAsync();
+        }
     }
 }
