@@ -7,5 +7,6 @@
         Task<ICollection<Models.Task>> GetAllTasks(int projectId);
         Task UpdateTaskState(int taskId);
         Task<int> CountTotalTasksInProject(int Project);
+        Task<int> CountTotalCompletedTasksInProject(int Project);
     }
 }

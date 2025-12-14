@@ -33,6 +33,12 @@ namespace ProjectTasksManager.Services
             int count = tasks.Count;
             return count;
         }
+        public async Task<int> CountTotalCompletedTasksInProject(int projectId)
+        {
+            var tasks = await taskRepository.GetAllTasks(projectId);
+            int count = tasks.Where(t=>t.Completed == true).Count();
+            return count;
+        }
 
         public async Task DeleteTask(int taskId)
         {
