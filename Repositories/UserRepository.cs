@@ -25,6 +25,14 @@ namespace ProjectTasksManager.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<bool> IsEmailUniqueAsync(string email)
         {
 
