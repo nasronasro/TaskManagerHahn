@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.Project;
 using ProjectTasksManager.Mappers;
 using ProjectTasksManager.Models;
+using ProjectTasksManager.Services;
 using ProjectTasksManager.Services.Interfaces;
 
 namespace ProjectTasksManager.Controllers
@@ -14,9 +15,11 @@ namespace ProjectTasksManager.Controllers
     public class ProjectController : Controller
     {
         private readonly IProjectService projectService;
-        public ProjectController(IProjectService projectService)
+        private readonly ITaskService taskService;
+        public ProjectController(IProjectService projectService, ITaskService taskService)
         {
             this.projectService = projectService;
+            this.taskService = taskService;
         }
 
         [HttpPost]
@@ -106,6 +109,48 @@ namespace ProjectTasksManager.Controllers
                 );
             }
         }
+        [HttpGet("counttasks/{projectId}")]
+        public async Task<IActionResult> GetTaskCount(int projectId)
+        {
+            try
+            {
+                int count = await taskService.CountTotalTasksInProject(projectId);
+                return Ok(count);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during Fetching Tasks." });
+            }
 
+        }
+        [HttpGet("counttasks/{projectId}/completed")]
+        public async Task<IActionResult> GetCompletedTaskCount(int projectId)
+        {
+            try
+            {
+                int count = await taskService.CountTotalCompletedTasksInProject(projectId);
+                return Ok(count);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during Fetching Tasks." });
+            }
+        }
+        [HttpGet("counttasks/{projectId}/progress")]
+        public async Task<IActionResult> GetProgressOfProject(int projectId)
+        {
+            try
+            {
+                double progress = await taskService.CalculateProgress(projectId);
+                return Ok(progress);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Error = "An unexpected server error occurred during Fetching Tasks." });
+            }
+        }
     }
 }
