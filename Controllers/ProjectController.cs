@@ -4,14 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectTasksManager.DTOs.Project;
 using ProjectTasksManager.Mappers;
-using ProjectTasksManager.Models;
 using ProjectTasksManager.Services.Interfaces;
 
 namespace ProjectTasksManager.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ProjectController : Controller
     {
         private readonly IProjectService projectService;
@@ -19,7 +17,7 @@ namespace ProjectTasksManager.Controllers
         {
             this.projectService = projectService;
         }
-        
+        [HttpGet]
         public IActionResult Index()
         {
             return View();

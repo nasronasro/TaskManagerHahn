@@ -1,0 +1,19 @@
+﻿using ProjectTasksManager.Models;
+using Task = System.Threading.Tasks.Task;
+
+namespace ProjectTasksManager.Services.Interfaces
+{
+    public interface IUserService
+    {
+<<<<<<< HEAD
+        Task AddUser(User user);
+        Task<User?> GetUser(User user);
+        
+=======
+        Task<User> AddUser(User user);
+        Task<string> Authenticate(string email, string password);
+        Task<User?> GetUserById(int id);
+
+>>>>>>> features/userfeatures
+    }
+}
