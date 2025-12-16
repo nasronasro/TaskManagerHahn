@@ -29,7 +29,7 @@ namespace ProjectTasksManager.Services
             if (await projectRepository.checkProjectExist(project.Title))
                 throw new ArgumentException("This project title alreay exist!");
 
-            project.User = user;  
+            project.UserId = user.Id;  
             await projectRepository.create(project);
             await unitOfWork.CommitAsync();
         }

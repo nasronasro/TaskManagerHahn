@@ -11,7 +11,6 @@ namespace ProjectTasksManager.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ProjectController : Controller
     {
         private readonly IProjectService projectService;
@@ -25,6 +24,7 @@ namespace ProjectTasksManager.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost(ProjectCreateDto projectDto)
         {
+            Console.WriteLine("Trying to add project has Reached");
             if (!ModelState.IsValid) return BadRequest();
             try
             {
@@ -55,6 +55,7 @@ namespace ProjectTasksManager.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            Console.WriteLine("The Client has Reached");
             try
             {
                 string? userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
