@@ -1,56 +1,98 @@
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useProjectData } from '../hooks/useProjectData';
+import { useTasks } from '../hooks/useTasks';
+import TaskItem from '../components/TaskItem';
+import AddTaskModal from '../components/AddTaskModal';
+import ConfirmModal from '../components/ui/ConfirmModal';
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  const { project, totalTasks, completedTasks, progress, loading, error } = useProjectData(id);
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  // Data for the Project itself
+  const { project, progress, loading: projectLoading } = useProjectData(id);
+  // Data and CRUD logic for Tasks
+  const { tasks, loading: tasksLoading, addTask, toggleTaskStatus, deleteTask } = useTasks(id);
+  
 
-  if (loading) return <div className="p-10 text-center animate-pulse">Loading project details...</div>;
-  if (error) return <div className="p-10 text-red-500 text-center font-bold">{error}</div>;
+  const openDeleteModal = (taskId) => {
+    setTaskToDelete(taskId);
+    setIsConfirmOpen(true);
+  };
+
+  const confirmDeletion = () => {
+    if (taskToDelete) {
+      deleteTask(taskToDelete);
+      setTaskToDelete(null);
+    }
+  };
+
+  if (projectLoading) return <div className="p-10 text-center">Loading...</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6">
-      {/* Header Section */}
-      <header className="flex justify-between items-end">
-        <div>
-          <h1 className="text-4xl font-extrabold text-slate-900">{project?.name}</h1>
-          <p className="text-slate-500 mt-2">{project?.description}</p>
-        </div>
-        <div className="text-right">
-          <span className="text-sm font-medium text-slate-400">Project ID: #{id}</span>
-        </div>
-      </header>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard title="Total Tasks" value={totalTasks} color="bg-slate-50" />
-        <StatCard title="Completed" value={completedTasks} color="bg-green-50" textColor="text-green-700" />
-        <StatCard title="Progress" value={`${Math.round(progress)}%`} color="bg-blue-50" textColor="text-blue-700" />
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      {/* Header & Progress */}
+      <div className="flex justify-between items-start">
+        <button onClick={() => navigate('/projects')} className="text-indigo-600 font-medium">← Back</button>
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-indigo-700 transition-all"
+        >
+          + New Task
+        </button>
       </div>
 
-      {/* Progress Bar */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-        <div className="flex justify-between mb-2">
-          <span className="font-semibold text-slate-700">Project Completion</span>
-          <span className="text-slate-500">{Math.round(progress)}%</span>
-        </div>
-        <div className="w-full bg-slate-100 rounded-full h-4">
+      <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+        <h1 className="text-3xl font-bold text-slate-900">{project?.name || project?.title}</h1>
+        <div className="mt-4 w-full bg-slate-100 rounded-full h-3">
           <div 
-            className="bg-blue-600 h-4 rounded-full transition-all duration-500" 
+            className="bg-indigo-600 h-3 rounded-full transition-all duration-700" 
             style={{ width: `${progress}%` }}
-          ></div>
+          />
         </div>
+        <p className="text-sm text-slate-500 mt-2 font-medium">Project Progress: {Math.round(progress)}%</p>
       </div>
-    </div>
-  );
-}
 
-// Small reusable UI component for the stats
-function StatCard({ title, value, color, textColor = "text-slate-900" }) {
-  return (
-    <div className={`${color} p-6 rounded-2xl border border-transparent hover:border-slate-200 transition-all`}>
-      <p className="text-sm font-medium text-slate-500 uppercase">{title}</p>
-      <p className={`text-3xl font-bold mt-1 ${textColor}`}>{value}</p>
+      {/* Task List */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-slate-800">Tasks ({tasks.length})</h2>
+        
+        {tasksLoading ? (
+          <p>Loading tasks...</p>
+        ) : tasks.length > 0 ? (
+          <div className="grid gap-3">
+            {tasks.map(task => (
+              <TaskItem 
+                key={task.id || task.Id} 
+                task={task} 
+                onToggle={toggleTaskStatus} 
+                onDelete={() => openDeleteModal(task.id || task.Id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-10 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+            <p className="text-slate-500">No tasks yet. Click "New Task" to begin.</p>
+          </div>
+        )}
+      </div>
+
+      <AddTaskModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSave={addTask}
+        projectId={id}
+      />
+      <ConfirmModal 
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={confirmDeletion}
+        title="Delete Task?"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+      />
     </div>
   );
 }
