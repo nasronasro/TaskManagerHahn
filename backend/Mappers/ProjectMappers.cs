@@ -18,6 +18,7 @@ namespace ProjectTasksManager.Mappers
         {
             return new ProjectDto
             {
+                Id = entity.Id,
                 Title = entity.Title,
                 Description = entity.Description,
             };
