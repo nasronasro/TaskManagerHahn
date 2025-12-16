@@ -1,80 +1,46 @@
-import React, { useState } from 'react';
-
+// src/hooks/useLoginForm.js
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { BASE_URL, LOGIN_ENDPOINT } from '../config/apiConfig.js';
 
-const useLoginForm = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+const useLoginForm = (onSuccess) => { // Added onSuccess callback
+  const { login } = useAuth();
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    setMessage(null);
-    setErrors((prev) => ({
-      ...prev,
-      [name]: undefined,
-    }));
-  };
-
-  const validate = () => {
-    let newErrors = {};
-    if (!formData.email.includes('@')) {
-      newErrors.email = 'Please enter a valid email address.';
-    }
-    if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleLogin = async () => {
-    const url = `${BASE_URL}${LOGIN_ENDPOINT}`;
-    
+    const url = `${BASE_URL}${LOGIN_ENDPOINT}/login`;
     setLoading(true);
     setMessage(null);
 
     try {
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        let errorText = 'Login failed. Please check your credentials.';
-        try {
-            const errorData = await response.json();
-            errorText = errorData.message || errorText;
-            console.error('API Error Response:', errorData);
-        } catch (e) {
-            console.error('Failed to parse error response body:', e);
-        }
-        
-        setMessage({ type: 'error', text: errorText });
-        return;
+        throw new Error(data.error || data.Error || 'Login failed');
       }
 
-      const data = await response.json();
+      // 1. Stock credentials in Context & LocalStorage
+      login(data.user, data.token);
       
-      setMessage({ type: 'success', text: `Welcome, ${data.user?.name || 'User'}! Login was successful.` });
-      console.log('Login Successful, received data:', data);
-      
-      // In a real app, you would save the token and redirect here
-      
+      // 2. Trigger the redirect callback
+      if (onSuccess) onSuccess();
+
     } catch (err) {
-      console.error('Network or Parse Error:', err);
-      setMessage({ type: 'error', text: 'A network error occurred. Please try again later.' });
+      setMessage({ type: 'error', text: err.message });
     } finally {
       setLoading(false);
     }
@@ -82,22 +48,10 @@ const useLoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      handleLogin();
-    }
+    handleLogin();
   };
 
-  const isFormValid = formData.email && formData.password.length >= 6;
-  
-  return {
-    formData,
-    errors,
-    loading,
-    message,
-    handleChange,
-    handleSubmit,
-    isFormValid,
-  };
+  return { formData, errors, loading, message, handleChange, handleSubmit };
 };
 
-export default useLoginForm
+export default useLoginForm;

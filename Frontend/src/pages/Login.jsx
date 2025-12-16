@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import InputField from '../components/ui/InputField';
 import useLoginForm from '../hooks/useLoginForm';
 
 function Login() {
+  const navigate = useNavigate();
   const {
     formData,
     errors,
@@ -10,8 +12,10 @@ function Login() {
     message,
     handleChange,
     handleSubmit,
-    isFormValid,
-  } = useLoginForm();
+  } = useLoginForm(() => {
+    // This runs only on successful login
+    navigate('/projects'); 
+  });
   
   return (
     <div className="flex items-center justify-center py-20 px-4 bg-gray-50 font-inter">
@@ -61,7 +65,7 @@ function Login() {
 
           <div className="mt-6">
             {/* Pass the loading state to the Button component */}
-            <Button type="submit" disabled={!isFormValid} loading={loading}>
+            <Button type="submit" loading={loading}>
               Log In
             </Button>
           </div>
