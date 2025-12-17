@@ -93,10 +93,6 @@ namespace ProjectTasksManager.Controllers
                 Project project = await projectService.GetProject(id, userEmail);
                 return Ok(ProjectMappers.MapProjectToProjectDto(project));
             }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { ex.Message });
-            }
             catch (Exception ex)
             {
                 return StatusCode(

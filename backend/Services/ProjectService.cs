@@ -39,11 +39,10 @@ namespace ProjectTasksManager.Services
                 User? user = await userRepository.GetAsyncUser(userEmail);
 
                 ICollection<Project> projects =  await projectRepository.GetAll(user);
-                if(projects.Count ==0)
-                    throw new KeyNotFoundException($"No projects found for user with email '{userEmail}'.");
+                
 
-            await unitOfWork.CommitAsync();
-            return projects;
+                await unitOfWork.CommitAsync();
+                return projects;
         }
 
         public async Task<Project> GetProject(int id, string userEmail)

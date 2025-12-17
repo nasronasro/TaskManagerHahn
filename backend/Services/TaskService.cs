@@ -47,7 +47,7 @@ namespace ProjectTasksManager.Services
             int total = await CountTotalTasksInProject(projectId);
             int completed = await CountTotalCompletedTasksInProject(projectId);
             double progress = (double)completed / total;
-            return progress;
+            return progress * 100;
         }
 
 
@@ -74,10 +74,10 @@ namespace ProjectTasksManager.Services
         public async Task UpdateTaskState(int taskId)
         {
             Models.Task? task = await taskRepository.GetTask(taskId);
-            if (task == null || task.Completed)
+            if (task == null)
                 throw new KeyNotFoundException($"The Project associated with Task ID {taskId} could not be found.");
 
-            task.Completed = true;
+            task.Completed = !task.Completed;
             await unitOfWork.CommitAsync();
         }
     }
