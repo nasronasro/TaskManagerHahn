@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
   };
+  
 
   // The 'value' object is what useAuth() destructures
   return (

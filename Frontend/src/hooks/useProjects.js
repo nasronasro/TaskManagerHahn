@@ -3,12 +3,11 @@ import { PROJECT_URL } from '../config/apiConfig';
 
 export default function useProjects() {
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);   // For the initial list fetch
-  const [isSaving, setIsSaving] = useState(false); // For the "Add Project" button state
-  const [error, setError] = useState(null);       // General errors
-  const [addError, setAddError] = useState(null); // Specific errors for the modal
+  const [loading, setLoading] = useState(true);   
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState(null);      
+  const [addError, setAddError] = useState(null); 
 
-  // --- 1. FETCH ALL PROJECTS (GET) ---
   const fetchProjects = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -29,7 +28,7 @@ export default function useProjects() {
       }
 
       const data = await response.json();
-      // Map and process the data so the UI has everything it needs (progress, colors, etc.)
+      // Use the helper function to normalize data
       setProjects(data.map(p => processProjectData(p)));
     } catch (err) {
       setError(err.message);
@@ -38,7 +37,6 @@ export default function useProjects() {
     }
   }, []);
 
-  // --- 2. ADD NEW PROJECT (POST) ---
   const addProject = async (projectData) => {
     setIsSaving(true);
     setAddError(null);
@@ -51,7 +49,6 @@ export default function useProjects() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        // Match your .NET UserDto/ProjectDto names
         body: JSON.stringify({
           Title: projectData.title,
           Description: projectData.description
@@ -61,11 +58,9 @@ export default function useProjects() {
       const data = await response.json();
 
       if (!response.ok) {
-        // This catches your catch(Exception) or BadRequest(ModelState) in .NET
         throw new Error(data.error || data.Error || "Failed to save project.");
       }
 
-      // Process the new project returned from the DB and add it to the top of the list
       const newlyCreatedProject = processProjectData(data);
       setProjects((prev) => [newlyCreatedProject, ...prev]);
       
@@ -94,20 +89,19 @@ export default function useProjects() {
   };
 }
 
-// Helper to ensure data matches UI needs
 function processProjectData(project) {
-  // Check both lowercase and uppercase because .NET JSON naming can vary
-  const title = project.title || project.Title;
   const id = project.id || project.Id;
-
+  const title = project.title;
+  
   return {
     ...project,
     id,
     title,
     description: project.description || project.Description,
     progress: project.progress ?? 0,
-    status: project.isCompleted ? "Completed" : "In Progress",
-    // Dynamic color based on ID for a nice UI look
-    color: ["#4f46e5", "#16a34a", "#dc2626", "#ca8a04"][id % 4] 
+    isCompleted: project.isCompleted ,
+    status: (project.isCompleted) ? "Completed" : "In Progress",
+    // Deterministic color assignment based on ID
+    color: ["#4f46e5", "#16a34a", "#dc2626", "#ca8a04"][id % 4] || '#6366f1'
   };
 }

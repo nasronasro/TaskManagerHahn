@@ -33,10 +33,8 @@ const useLoginForm = (onSuccess) => { // Added onSuccess callback
         throw new Error(data.error || data.Error || 'Login failed');
       }
 
-      // 1. Stock credentials in Context & LocalStorage
       login(data.user, data.token);
       
-      // 2. Trigger the redirect callback
       if (onSuccess) onSuccess();
 
     } catch (err) {

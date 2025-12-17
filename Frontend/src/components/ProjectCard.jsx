@@ -1,57 +1,94 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 
+
 const ProjectCard = ({ project }) => {
-  // 1. Logic for dynamic styling kept separate for readability
+  
   const statusClasses = {
-    "In Progress": "text-indigo-800 bg-indigo-100",
-    "Completed": "text-green-800 bg-green-100",
-    "Not Started": "text-blue-800 bg-blue-100",
-    "Pending": "text-gray-800 bg-gray-100",
+    "In Progress": "text-indigo-700 bg-indigo-50 border-indigo-100",
+    "Completed": "text-emerald-700 bg-emerald-50 border-emerald-100",
+    "Not Started": "text-amber-700 bg-amber-50 border-amber-100",
+    "Pending": "text-slate-600 bg-slate-50 border-slate-100",
   };
   
-  const statusBadge = statusClasses[project.status] || "text-gray-800 bg-gray-100";
+  // Fallback style if status doesn't match keys
+  const statusBadge = statusClasses[project.status] || "text-gray-600 bg-gray-50 border-gray-100";
   
+  // Safe extraction of IDs and values (handling C# PascalCase or JS camelCase)
+  const projectId = project.id || project.Id;
+  const projectTitle = project.title || project.name;
+  const projectColor = project.color || '#6366f1';
+  const progressValue = project.progress ?? 0;
+
   return (
     <div 
-      className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 p-6 flex flex-col justify-between border-t-4" 
-      style={{ borderColor: project.color }}
+      className="group relative bg-white rounded-3xl p-7 flex flex-col justify-between border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden" 
     >
+      {/* Visual Top Accent - Uses the project's custom color */}
+      <div 
+        className="absolute top-0 left-0 w-full h-1.5" 
+        style={{ backgroundColor: projectColor }}
+      />
+
       <div>
-        <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${statusBadge} mb-4`}>
-          {project.status}
-        </span>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">
-          {project.title}
+        <div className="flex justify-between items-start mb-5">
+          {/* Status Badge */}
+          <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border ${statusBadge}`}>
+            {project.status || "Unknown"}
+          </span>
+          
+          {/* Project ID Tag */}
+          <span className="text-[10px] font-mono text-gray-400 bg-gray-50 px-2 py-1 rounded">
+            #{projectId}
+          </span>
+        </div>
+
+        {/* Project Title */}
+        <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-1">
+          {projectTitle}
         </h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-          {project.description}
+        
+        {/* Project Description */}
+        <p className="text-gray-500 text-sm leading-relaxed line-clamp-2 mb-6 h-10">
+          {project.description || "No description provided for this workspace."}
         </p>
       </div>
       
-      <div className="mt-auto pt-4">
-        {/* Progress Section */}
-        <div className="flex justify-between text-sm font-medium text-gray-700 mb-1">
-          <span>Progress ({project.completedTasks}/{project.totalTasks || 0} tasks)</span>
-          <span>{Math.round(project.progress)}%</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div 
-            className="h-2.5 rounded-full transition-all duration-500"
-            style={{ width: `${project.progress}%`, backgroundColor: project.color }}
-          ></div>
+      <div className="space-y-4">
+        {/* Backend-Synced Progress Section */}
+        <div className="bg-gray-50 p-4 rounded-2xl">
+          <div className="flex justify-between text-xs font-bold text-gray-600 mb-2">
+            <span>Progress</span>
+            <span className="text-indigo-600">{Math.round(progressValue)}%</span>
+          </div>
+          
+          {/* Progress Bar Track */}
+          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+            <div 
+              className="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(0,0,0,0.1)]"
+              style={{ 
+                width: `${progressValue}%`, 
+                backgroundColor: projectColor 
+              }}
+            />
+          </div>
+          
+          {/* Task Counter Text */}
+          <p className="text-[10px] text-gray-400 mt-2 italic">
+            {project.completedTasks || 0} of {project.totalTasks || 0} tasks finished
+          </p>
         </div>
 
-        {/* Action Section */}
-        <div className="text-xs text-gray-500 mt-4 flex justify-between items-center">
-            <span>ID: {project.id}</span>
-            {/* 2. Changed <a> to <Link> for React Router navigation */}
-            <Link 
-                to={`/projects/${project.id}`} 
-                className="text-indigo-600 hover:text-indigo-800 font-bold text-sm transition-colors"
-            >
-              View Details &rarr;
-            </Link>
-        </div>
+        {/* Main Action Button */}
+        <Link 
+          to={`/projects/${projectId}`} 
+          className="w-full flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-xl font-bold text-sm hover:bg-indigo-600 transition-all group/btn"
+        >
+          Manage Tasks
+          <span className="group-hover/btn:translate-x-1 transition-transform duration-300">
+            →
+          </span>
+        </Link>
       </div>
     </div>
   );
