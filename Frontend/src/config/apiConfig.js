@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://localhost:7240'; 
+export const BASE_URL = 'http://localhost:5000'; 
 export const LOGIN_ENDPOINT = '/api/User';
 export const PROJECTS_ENDPOINT = '/api/project';
 export const TASKS_ENDPOINT = '/api/task'
