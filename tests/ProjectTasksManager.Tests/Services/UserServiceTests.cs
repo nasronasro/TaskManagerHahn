@@ -62,7 +62,7 @@ public class UserServiceTests
         var sut = CreateSut();
         var email = "test@example.com";
         var password = "Password123";
-        var hashedPassword = HashPassword(password); // Using your internal hashing logic
+        var hashedPassword = HashPassword(password); 
         var mockUser = new User { Email = email, Password = hashedPassword };
         var expectedToken = "valid-jwt-token";
 
@@ -74,7 +74,7 @@ public class UserServiceTests
 
         // Assert
         result.Should().Be(expectedToken);
-        await _unitOfWork.Received(1).CommitAsync(); // Verify tracking/updates are saved
+        await _unitOfWork.Received(1).CommitAsync(); 
     }
 
     [Fact]
