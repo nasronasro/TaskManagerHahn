@@ -9,6 +9,7 @@ namespace ProjectTasksManager.Services
 {
     public class ProjectService : IProjectService
     {
+        //dependencies inversion respecting the D in Solid
         private readonly IProjectRepository projectRepository;
         private readonly IUserRepository userRepository;
         private readonly IUnitOfWork unitOfWork;
@@ -20,6 +21,9 @@ namespace ProjectTasksManager.Services
             this.unitOfWork = unitOfWork;
         }
 
+
+        //This Section for Basic Create and Fetching Projects aswell as single project
+        #region Basic Crud
         public async Task AddProject(Project project, string userEmail)
         {
             User? user = await userRepository.GetAsyncUser(userEmail);
@@ -54,5 +58,6 @@ namespace ProjectTasksManager.Services
             await unitOfWork.CommitAsync();
             return project;
         }
+        #endregion
     }
 }

@@ -8,6 +8,7 @@ namespace ProjectTasksManager.Services
 
     public class TaskService : ITaskService
     {
+        //dependencies inversion respecting the D in Solid
         private readonly ITaskRepository taskRepository;
         private readonly IProjectRepository projectRepository;
         private readonly IUnitOfWork unitOfWork;
@@ -17,6 +18,9 @@ namespace ProjectTasksManager.Services
             this.projectRepository = projectRepository;
             this.unitOfWork = unitOfWork;
         }
+        //---Basic Crud Section---
+        #region Basic Crud.
+        //the use of Models.Task here to not confuse it with System.threding.Tasks.task
         public async Task AddTask(Models.Task task, string userEmail)
         {
             task.Project = await projectRepository.GetOne(task.ProjectId, userEmail);
@@ -26,30 +30,6 @@ namespace ProjectTasksManager.Services
             await taskRepository.Create(task);
             await unitOfWork.CommitAsync();
         }
-
-        public async Task<int> CountTotalTasksInProject(int projectId)
-        {
-            var tasks = await taskRepository.GetAllTasks(projectId);
-            int count = tasks.Count;
-            return count;
-        }
-        public async Task<int> CountTotalCompletedTasksInProject(int projectId)
-        {
-            var tasks = await taskRepository.GetAllTasks(projectId);
-            int count = tasks.Where(t=>t.Completed == true).Count();
-            return count;
-        }
-        public async Task<double> CalculateProgress(int projectId)
-        {
-            if (await CountTotalTasksInProject(projectId) == 0)
-                throw new ArithmeticException("There is no tasks to count Progress");
-
-            int total = await CountTotalTasksInProject(projectId);
-            int completed = await CountTotalCompletedTasksInProject(projectId);
-            double progress = (double)completed / total;
-            return progress * 100;
-        }
-
 
         public async Task DeleteTask(int taskId)
         {
@@ -79,6 +59,31 @@ namespace ProjectTasksManager.Services
 
             task.Completed = !task.Completed;
             await unitOfWork.CommitAsync();
+        }
+        #endregion
+
+        //Other Calculations logics done in Backend Service
+        public async Task<int> CountTotalTasksInProject(int projectId)
+        {
+            var tasks = await taskRepository.GetAllTasks(projectId);
+            int count = tasks.Count;
+            return count;
+        }
+        public async Task<int> CountTotalCompletedTasksInProject(int projectId)
+        {
+            var tasks = await taskRepository.GetAllTasks(projectId);
+            int count = tasks.Where(t=>t.Completed == true).Count();
+            return count;
+        }
+        public async Task<double> CalculateProgress(int projectId)
+        {
+            if (await CountTotalTasksInProject(projectId) == 0)
+                throw new ArithmeticException("There is no tasks to count Progress");
+
+            int total = await CountTotalTasksInProject(projectId);
+            int completed = await CountTotalCompletedTasksInProject(projectId);
+            double progress = (double)completed / total;
+            return progress * 100;
         }
     }
 }

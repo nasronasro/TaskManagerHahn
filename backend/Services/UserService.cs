@@ -11,6 +11,7 @@ namespace ProjectTasksManager.Services
 {
     public class UserService : IUserService
     {
+        ////dependencies inversion respecting the D in Solid
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
@@ -21,6 +22,8 @@ namespace ProjectTasksManager.Services
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
         }
+
+        //adding User for testing puposes
         public async Task<User> AddUser(User user)
         {
             if (await _userRepository.IsEmailUniqueAsync(user.Email))
@@ -34,6 +37,7 @@ namespace ProjectTasksManager.Services
             throw new ArgumentException($"User with email '{user.Email}' already exists.");
         }
 
+        // Authentification using JWT TokenService 
         public async Task<string> Authenticate(string email, string password)
         {
             var user = await _userRepository.GetAsyncUser(email);
@@ -47,6 +51,7 @@ namespace ProjectTasksManager.Services
             return _tokenService.GenerateToken(user);
         }
 
+        
         public async Task<User?> GetUserById(int id)
         {
             if (await _userRepository.GetByIdAsync(id) == null)
@@ -56,6 +61,7 @@ namespace ProjectTasksManager.Services
             return await _userRepository.GetByIdAsync(id);
         }
 
+        //Help methodes for hashing and verifying password
         private string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
