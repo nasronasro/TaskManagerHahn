@@ -1,0 +1,9 @@
+﻿global using Xunit;
+global using NSubstitute;
+global using NSubstitute.ExceptionExtensions;
+global using FluentAssertions;
+global using Microsoft.AspNetCore.Mvc;
+global using ProjectTasksManager.Controllers;
+global using ProjectTasksManager.Services.Interfaces;
+global using ProjectTasksManager.DTOs.User;
+global using ProjectTasksManager.Models;
