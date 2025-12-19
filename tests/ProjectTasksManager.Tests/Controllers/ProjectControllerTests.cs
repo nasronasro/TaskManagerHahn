@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using ProjectTasksManager.DTOs.Project;
-using Task = System.Threading.Tasks.Task;
 
 namespace ProjectTasksManager.Tests.Controllers;
 

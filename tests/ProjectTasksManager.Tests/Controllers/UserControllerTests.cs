@@ -1,7 +1,4 @@
-﻿
-using Task = System.Threading.Tasks.Task;
-
-namespace ProjectTasksManager.Tests.Controllers;
+﻿namespace ProjectTasksManager.Tests.Controllers;
 
 // Using C# 14 Primary Constructor for the Test Class
 public class UserControllerTests()
