@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useProjects from '../hooks/useProjects';
 import ProjectCard from '../components/ProjectCard';
-import AddProjectModal from '../components/AddProjectModal';
+import AddProjectModal from '../components/ui/AddProjectModal';
 import AddButton from '../components/ui/AddButton';
 import Pagination from '../components/ui/Pagination';
 
@@ -63,7 +63,7 @@ function Projects() {
         {/* Project Grid */}
         {!loading && projects.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-400px">
               {currentProjects.map((project) => (
                 <ProjectCard key={project.id || project.Id} project={project} />
               ))}

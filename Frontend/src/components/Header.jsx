@@ -47,7 +47,7 @@ function Header() {
                 My Projects
               </Link>
               
-              <div className="h-6 w-[1px] bg-gray-700 mx-2"></div>
+              <div className="h-6 w-px bg-gray-700 mx-2"></div>
 
               <button 
                 onClick={handleLogout}

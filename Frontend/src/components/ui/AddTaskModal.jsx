@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 export default function AddTaskModal({ isOpen, onClose, onSave, projectId }) {
   if (!isOpen) return null;
 

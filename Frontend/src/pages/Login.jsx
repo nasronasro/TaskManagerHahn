@@ -13,7 +13,6 @@ function Login() {
     handleChange,
     handleSubmit,
   } = useLoginForm(() => {
-    // This runs only on successful login
     navigate('/projects'); 
   });
   
@@ -70,7 +69,7 @@ function Login() {
             </Button>
           </div>
         </form>
-        {/*
+        {/* 
         <div className="mt-6 text-center text-sm">
           <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
             Forgot your password?
