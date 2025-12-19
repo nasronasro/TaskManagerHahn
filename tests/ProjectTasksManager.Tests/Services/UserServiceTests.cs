@@ -55,4 +55,66 @@ public class UserServiceTests
         // Verify we never committed if validation failed
         await _unitOfWork.DidNotReceive().CommitAsync();
     }
+    [Fact]
+    public async Task Authenticate_ShouldReturnToken_WhenCredentialsAreValid()
+    {
+        // Arrange
+        var sut = CreateSut();
+        var email = "test@example.com";
+        var password = "Password123";
+        var hashedPassword = HashPassword(password); // Using your internal hashing logic
+        var mockUser = new User { Email = email, Password = hashedPassword };
+        var expectedToken = "valid-jwt-token";
+
+        _userRepository.GetAsyncUser(email).Returns(mockUser);
+        _tokenService.GenerateToken(mockUser).Returns(expectedToken);
+
+        // Act
+        var result = await sut.Authenticate(email, password);
+
+        // Assert
+        result.Should().Be(expectedToken);
+        await _unitOfWork.Received(1).CommitAsync(); // Verify tracking/updates are saved
+    }
+
+    [Fact]
+    public async Task Authenticate_ShouldThrowException_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var sut = CreateSut();
+        _userRepository.GetAsyncUser("nonexistent@test.com").Returns((User)null!);
+
+        // Act
+        var act = () => sut.Authenticate("nonexistent@test.com", "anyPassword");
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>()
+            .WithMessage("Invalid credentials.");
+    }
+
+    [Fact]
+    public async Task Authenticate_ShouldThrowException_WhenPasswordIsIncorrect()
+    {
+        // Arrange
+        var sut = CreateSut();
+        var email = "test@example.com";
+        var mockUser = new User { Email = email, Password = HashPassword("CorrectPassword") };
+
+        _userRepository.GetAsyncUser(email).Returns(mockUser);
+
+        // Act
+        var act = () => sut.Authenticate(email, "WrongPassword");
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>()
+            .WithMessage("Invalid credentials.");
+    }
+
+    // helper method inside the UserServiceTests class to provide a local HashPassword implementation for testing.
+    private string HashPassword(string password)
+    {
+        using var sha256 = System.Security.Cryptography.SHA256.Create();
+        var hashedBytes = System.Text.Encoding.UTF8.GetBytes(password);
+        return Convert.ToBase64String(sha256.ComputeHash(hashedBytes));
+    }
 }
