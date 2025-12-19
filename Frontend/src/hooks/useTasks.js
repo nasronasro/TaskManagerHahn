@@ -90,8 +90,6 @@ export const useTasks = (projectId, onDataChange, itemsPerPage = 5) => {
       if (!res.ok) throw new Error("Could not create task");
       
       await refreshWorkspace(); 
-      // Optional: Jump to last page to see new task
-      // setCurrentPage(Math.ceil((tasks.length + 1) / itemsPerPage));
       return { success: true };
     } catch (err) {
       return { success: false, error: err.message };
@@ -105,28 +103,24 @@ export const useTasks = (projectId, onDataChange, itemsPerPage = 5) => {
 
     const originalStatus = taskToUpdate.completed;
 
-    // 1. Optimistic Update (Toggle immediately in UI)
     setTasks(prev => prev.map(t => 
       t.id === taskId ? { ...t, completed: !originalStatus } : t
     ));
 
     try {
-      // 2. Send Request - NO BODY needed for your specific Backend
       const res = await fetch(`${BASE_URL}${TASKS_ENDPOINT}/${taskId}`, {
         method: 'PATCH',
         headers
-        // REMOVED BODY: The backend [HttpPatch("{id}")] only accepts ID from URL
+
       });
 
       if (!res.ok) {
-        // Revert on failure
         setTasks(prev => prev.map(t => 
             t.id === taskId ? { ...t, completed: originalStatus } : t
         ));
         throw new Error("Could not update task");
       }
       
-      // 3. Sync with server to ensure state is correct
       await refreshWorkspace();
     } catch (err) {
       console.error("Toggle error:", err.message);
@@ -156,8 +150,8 @@ export const useTasks = (projectId, onDataChange, itemsPerPage = 5) => {
   }, [fetchTasks]);
 
   return { 
-    tasks, // Full list (for Progress Bar / Stats)
-    paginatedTasks, // Sliced list (for Rendering)
+    tasks, 
+    paginatedTasks, 
     loading, 
     error, 
     addTask, 

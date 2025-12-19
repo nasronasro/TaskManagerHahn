@@ -1,8 +1,3 @@
-using ProjectTasksManager.Data;
-using ProjectTasksManager.Repositories.Interfaces;
-using ProjectTasksManager.Services;
-using Task = System.Threading.Tasks.Task;
-
 namespace ProjectTasksManager.Tests.Services;
 
 public class UserServiceTests

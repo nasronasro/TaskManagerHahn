@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import InputField from  './ui/InputField';
-import AddButton from './ui/AddButton';
+import { useState } from 'react';
+import InputField from  './InputField';
+import AddButton from './AddButton';
 
 const AddProjectModal = ({ isOpen, onClose, onSave, isSaving, addError }) => {
     const [title, setTitle] = useState('');

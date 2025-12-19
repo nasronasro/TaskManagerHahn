@@ -10,7 +10,7 @@ function Home() {
         
         {/* Header Section */}
         <div className="text-center mb-10">
-          <h1 className="text-5xl sm:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">
+          <h1 className="text-5xl sm:text-6xl font-black mb-4 bg-clip-text text-transparent bg-linear-to-r from-indigo-600 to-purple-600 tracking-tight">
             TASKFLOW
           </h1>
           <p className="text-gray-500 text-lg max-w-lg mx-auto">
@@ -50,7 +50,7 @@ function Home() {
           <Link 
             to={token ? "/projects" : "/login"}
             className="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 text-lg font-bold rounded-2xl 
-                       text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-xl shadow-indigo-200
+                       text-white bg-linear-to-r from-indigo-600 to-purple-600 shadow-xl shadow-indigo-200
                        hover:scale-[1.03] transition-all duration-200 active:scale-95"
           >
             {token ? "Go to My Workspace" : "Get Started Now"}

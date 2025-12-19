@@ -34,7 +34,6 @@ export const useProjectData = (id) => {
         title: data.title || data.Title,
         description: data.description || data.Description,
         color: data.color || ["#4f46e5", "#16a34a", "#dc2626", "#ca8a04"][data.id % 4] || '#6366f1',
-        // We capture backend progress, but UI will prefer local calculation
         progress: data.progress ?? 0 
       };
 

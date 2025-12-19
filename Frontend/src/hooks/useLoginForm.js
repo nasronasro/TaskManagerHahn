@@ -1,9 +1,8 @@
-// src/hooks/useLoginForm.js
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { BASE_URL, LOGIN_ENDPOINT } from '../config/apiConfig.js';
 
-const useLoginForm = (onSuccess) => { // Added onSuccess callback
+const useLoginForm = (onSuccess) => { 
   const { login } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
