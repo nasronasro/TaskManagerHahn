@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function TaskItem({ task, onToggle, onDelete }) {
   // Handle C# PascalCase or JS camelCase

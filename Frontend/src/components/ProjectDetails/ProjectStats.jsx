@@ -1,5 +1,7 @@
-// components/ProjectStats.jsx
-export default function ProjectStats({ project, completionPercentage }) {
+// components/ProjectDetails/ProjectStats.jsx
+import ProgressBar from '../ui/ProgressBar';
+
+export default function ProjectStats({ project, tasks }) {
   const brandColor = project?.color || '#6366f1';
 
   return (
@@ -15,21 +17,12 @@ export default function ProjectStats({ project, completionPercentage }) {
             {project?.name || project?.title}
           </h1>
           <p className="text-slate-500 max-w-xl text-sm leading-relaxed">
-            {project?.description || "Manage your objectives, track progress, and complete milestones."}
+            {project?.description || "Manage your objectives and milestones."}
           </p>
         </div>
 
-        <div className="w-full md:w-64 space-y-2">
-          <div className="flex justify-between items-end">
-            <span className="text-xs font-bold text-slate-400">COMPLETION</span>
-            <span className="text-2xl font-black text-indigo-600">{completionPercentage}%</span>
-          </div>
-          <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-            <div 
-              className="h-full rounded-full transition-all duration-1000 ease-out" 
-              style={{ width: `${completionPercentage}%`, backgroundColor: brandColor }}
-            />
-          </div>
+        <div className="w-full md:w-64">
+          <ProgressBar tasks={tasks} color={brandColor} />
         </div>
       </div>
     </div>

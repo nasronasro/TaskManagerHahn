@@ -54,11 +54,11 @@ export default function ProjectDetail() {
       </header>
 
       {/* 2. Project Info Section */}
-      <ProjectStats project={project} completionPercentage={completionPercentage} />
+      <ProjectStats project={project} tasks={tasks} />
 
       {/* 3. Tasks Section */}
       <TaskList 
-        tasks={filteredTasks} // Pass the filtered result
+        tasks={filteredTasks} 
         totalCount={tasks.length}
         currentFilter={filter}
         setFilter={setFilter}
